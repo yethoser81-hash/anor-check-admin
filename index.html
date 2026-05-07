@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>ANOR-CHECK | Saisie Produit</title>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
+    
+    <style>
+        :root { --green: #008751; --grey-bg: #f4f7f9; }
+        body { font-family: 'Segoe UI', sans-serif; display: flex; margin: 0; background: var(--grey-bg); height: 100vh; }
+        
+        .sidebar { width: 400px; background: white; padding: 25px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); overflow-y: auto; }
+        .display-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .preview-container { display: flex; gap: 20px; align-items: center; justify-content: center; width: 100%; }
+        
+        h2 { color: var(--green); border-bottom: 2px solid var(--green); padding-bottom: 10px; margin-top: 0; }
+        
+        .field-group { margin-bottom: 15px; }
+        label { display: block; font-size: 11px; font-weight: bold; color: #546e7a; text-transform: uppercase; margin-bottom: 5px; }
+        input { width: 100%; padding: 10px; border: 1px solid #cfd8dc; border-radius: 4px; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--green); }
+        
+        .box-render { 
+            width: 320px; height: 420px; border: 5px solid white; background: #e0e4e7; 
+            display: flex; align-items: center; justify-content: center; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; overflow: hidden;
+        }
+        .box-render img { max-width: 100%; max-height: 100%; display: none; }
+        .placeholder { color: #90a4ae; text-align: center; font-size: 12px; font-weight: 500; padding: 10px; }
+        
+        .btn-forge { 
+            width: 100%; padding: 15px; background: var(--green); border: none; 
+            color: white; font-weight: bold; border-radius: 4px; cursor: pointer; 
+            margin-top: 20px; transition: 0.3s;
+        }
+
+        #temp-link-box {
+            margin-top: 20px; padding: 15px; background: #fff; border: 1px dashed var(--green);
+            display: none; border-radius: 4px; width: 85%; text-align: center;
+        }
+
+        .btn-share {
+            margin-top: 10px; padding: 8px 15px; background: #E8F5E9; color: var(--green);
+            border: 1px solid var(--green); border-radius: 20px; cursor: pointer;
+            font-size: 11px; font-weight: bold; transition: 0.2s;
+        }
+        .btn-share:hover { background: var(--green); color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>ANOR-CHECK</h2>
+        
+        <div class="field-group">
+            <label>Nature du Produit</label>
+            <input type="text" id="in-nature" placeholder="Ex: Huile de soja" value="MAYOR Huile Rouge">
+        </div>
+
+        <div class="field-group">
+            <label>Entreprise / Fabricant</label>
+            <input type="text" id="in-company" placeholder="Ex: Société Industrielle X">
+        </div>
+
+        <div class="field-group">
+            <label>Mode de Conditionnement</label>
+            <input type="text" id="in-pack" placeholder="Ex: Bouteille PET 1L">
+        </div>
+
+        <div class="field-group">
+            <label>Nationalité d'Origine</label>
+            <input type="text" id="in-origin" value="Cameroun">
+        </div>
+
+        <div class="field-group">
+            <label>Numéro de Lot</label>
+            <input type="text" id="in-lot" placeholder="Ex: LOT-2024-001" value="BN-2026-X88">
+        </div>
+
+        <div style="display:flex; gap:10px;">
+            <div class="field-group" style="flex:1;">
+                <label>Date Production</label>
+                <input type="date" id="in-date-prod">
+            </div>
+            <div class="field-group" style="flex:1;">
+                <label>Date Péremption</label>
+                <input type="date" id="in-date-exp">
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+        <div class="field-group">
+            <label>1. Photo de l'emballage</label>
+            <input type="file" id="up-image" accept="image/*">
+        </div>
+
+        <div class="field-group">
+            <label>2. Certificat de Conformité</label>
+            <input type="file" id="up-cert" accept="image/*,application/pdf">
+        </div>
+
+        <button class="btn-forge" id="btn-run-forge">GÉNÉRER LE SCEAU NUMÉRIQUE</button>
+        <p id="forge-msg" style="font-size: 10px; color: #888; margin-top: 10px; text-align: center;"></p>
+    </div>
+
+    <div class="display-area">
+        <div class="preview-container">
+            <div>
+                <p style="font-size: 11px; text-align: center; font-weight: bold; color: #666;">PHOTO PRODUIT</p>
+                <div class="box-render" id="preview-box">
+                    <span class="placeholder" id="txt-placeholder">En attente de l'image produit...</span>
+                    <img id="img-render" src="">
+                </div>
+            </div>
+
+            <div>
+                <p style="font-size: 11px; text-align: center; font-weight: bold; color: var(--green);">SCEAU GÉNÉRÉ</p>
+                <div class="box-render" id="forge-box">
+                    <span class="placeholder" id="txt-forge-placeholder">Le sceau apparaîtra ici...</span>
+                    <img id="img-forge-render" src="">
+                </div>
+            </div>
+        </div>
+
+        <div id="temp-link-box">
+            <span style="font-size: 11px; color: #666;">Lien de vérification généré :</span><br>
+            <code id="display-link" style="font-size: 10px; color: var(--green); font-weight: bold;"></code><br>
+            <button class="btn-share" id="btn-share-link">PARTAGER LE LIEN</button>
+        </div>
+        
+        <canvas id="forgeCanvas" width="1200" height="1200" style="display:none;"></canvas>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9CRKSou21mfNtuYBRkPcP6TnEFjSEEoI",
+            authDomain: "anor-check-33657.firebaseapp.com",
+            projectId: "anor-check-33657",
+            storageBucket: "anor-check-33657.firebasestorage.app",
+            appId: "1:366972571702:web:5573ca869202ce27e74897"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
+        const canvas = document.getElementById('forgeCanvas');
+        const ctx = canvas.getContext('2d');
+        const forgeMsg = document.getElementById('forge-msg');
+        let logoMaster = new Image();
+
+        async function loadLogo() {
+            try {
+                const doc = await db.collection('config_anor').doc('assets').get();
+                if (doc.exists) {
+                    logoMaster.crossOrigin = "anonymous";
+                    logoMaster.src = doc.data().logo_url;
+                    logoMaster.onload = () => { forgeMsg.innerText = "Sceau maître chargé depuis le Cloud."; };
+                }
+            } catch (e) { forgeMsg.innerText = "Erreur Cloud."; }
+        }
+        loadLogo();
+
+        document.getElementById('up-image').onchange = function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.getElementById('img-render');
+                    const txt = document.getElementById('txt-placeholder');
+                    img.src = event.target.result;
+                    img.style.display = 'block';
+                    txt.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        document.getElementById('btn-run-forge').onclick = function() {
+            const nature = document.getElementById('in-nature').value;
+            const lot = document.getElementById('in-lot').value;
+
+            if(!nature || !lot) { alert("Saisir Nature et Lot."); return; }
+
+            this.innerText = "FORGE EN COURS...";
+            
+            ctx.clearRect(0, 0, 1200, 1200);
+            ctx.drawImage(logoMaster, 0, 0, 1200, 1200);
+
+            const seed = nature + lot;
+            let hash = 0;
+            for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+            const posX = 0.3 + (Math.abs(hash % 40) / 100);
+            const posY = 0.7 + (Math.abs((hash >> 2) % 20) / 100);
+
+            ctx.beginPath();
+            ctx.arc(posX * 1200, posY * 1200, 20, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.22)";
+            ctx.fill();
+
+            const imgForge = document.getElementById('img-forge-render');
+            const txtForge = document.getElementById('txt-forge-placeholder');
+            const dataURL = canvas.toDataURL("image/png");
+            
+            imgForge.src = dataURL;
+            imgForge.style.display = 'block';
+            txtForge.style.display = 'none';
+
+            const tempID = Math.random().toString(36).substring(7).toUpperCase();
+            const link = "https://anor-check.gov.cm/verify/" + tempID;
+            document.getElementById('display-link').innerText = link;
+            document.getElementById('temp-link-box').style.display = "block";
+
+            this.innerText = "SCEAU GÉNÉRÉ ✓";
+            forgeMsg.innerText = "Authentification terminée.";
+            
+            setTimeout(() => { this.innerText = "RE-FORGER"; }, 2000);
+        };
+
+        // LOGIQUE DE PARTAGE
+        document.getElementById('btn-share-link').onclick = async function() {
+            const shareData = {
+                title: 'ANOR-CHECK | Vérification Produit',
+                text: 'Consultez la certification de conformité pour ce produit.',
+                url: document.getElementById('display-link').innerText
+            };
+
+            try {
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                } else {
+                    // Fallback : Copie dans le presse-papier
+                    await navigator.clipboard.writeText(shareData.url);
+                    alert("Lien copié dans le presse-papier !");
+                }
+            } catch (err) {
+                console.log('Erreur de partage:', err);
+            }
+        };
+    </script>
+</body>
+</html>
