@@ -29,5 +29,14 @@
     "company": "Délices d'éden",
     "date_exp": "2026-10-31",
     "img": "assets/logo_anor.png"
+  },
+  {
+    "id": "ANOR-M8JY1X",
+    "stegano_id": "STG_57_73",
+    "name": "beauty clear",
+    "lot": "BN-2026-X88",
+    "company": "SCC S.A",
+    "date_exp": "2026-10-31",
+    "img": "assets/logo_anor.png"
   }
 ]
