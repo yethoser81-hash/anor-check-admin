@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "id": "ANOR-ATU94H",
+    "name": "MAYOR Huile Rouge",
+    "lot": "BN-2026-X88",
+    "company": "SCC S.A",
+    "packaging": "Bidon 5L",
+    "origin": "Cameroun",
+    "date_prod": "2026-05-30",
+    "date_exp": "2029-03-31",
+    "status": "Certifié par l'ANOR"
+  }
+]
