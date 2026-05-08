@@ -9,5 +9,16 @@
     "date_prod": "2026-05-30",
     "date_exp": "2029-03-31",
     "status": "Certifié par l'ANOR"
+  },
+  {
+    "id": "ANOR-FVFXZI",
+    "name": "délices baobab",
+    "lot": "BN-2026-X75",
+    "company": "délices d'den",
+    "packaging": "1L bouteille plastique",
+    "origin": "Cameroun",
+    "date_prod": "2026-05-16",
+    "date_exp": "2026-11-28",
+    "status": "Certifié par l'ANOR"
   }
 ]
