@@ -20,5 +20,14 @@
     "date_prod": "2026-05-16",
     "date_exp": "2026-11-28",
     "status": "Certifié par l'ANOR"
+  },
+  {
+    "id": "ANOR-S7I07X",
+    "stegano_id": "STG_55_78",
+    "name": "jus corossol",
+    "lot": "BN-2026-X89",
+    "company": "Délices d'éden",
+    "date_exp": "2026-10-31",
+    "img": "assets/logo_anor.png"
   }
 ]
