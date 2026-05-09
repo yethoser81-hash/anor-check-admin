@@ -34,5 +34,22 @@
     "company": "SCC S.A",
     "date_exp": "2026-10-31",
     "img": "assets/logo_anor.png"
+  },
+  {
+    "id": "ANOR-GEB12L",
+    "name": "savon liquide",
+    "lot": "LOT-2026-k21",
+    "company": "dalida company",
+    "origin": "Cameroun",
+    "pack": "bidon de 2L",
+    "date_prod": "2026-05-23",
+    "date_exp": "2030-06-30",
+    "security_signature": {
+      "topo_offset": 2,
+      "fractal_freq": 128,
+      "stegano_id": "ANOR-5TW6M1"
+    },
+    "certificat_url": "docs/certificat_LOT-2026-k21.pdf",
+    "img": "assets/logo_anor.png"
   }
 ]
