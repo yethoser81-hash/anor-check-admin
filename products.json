@@ -51,5 +51,21 @@
     },
     "certificat_url": "docs/certificat_LOT-2026-k21.pdf",
     "img": "assets/logo_anor.png"
+  },
+  {
+    "id": "ANOR-4ZWCXW",
+    "name": "savon moringa",
+    "lot": "LOT 245-k25",
+    "company": "françois groupe",
+    "pack": "emballage papier 250G",
+    "origin": "Cameroun",
+    "date_prod": "2026-05-30",
+    "date_exp": "2031-07-31",
+    "security_signature": {
+      "topo_rotation": 4,
+      "topo_scale": 1.04,
+      "stegano_id": "TRINITY-4ZWCXW"
+    },
+    "certificat_url": "docs/cert_LOT 245-k25.pdf"
   }
 ]
