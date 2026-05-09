@@ -67,5 +67,21 @@
       "stegano_id": "TRINITY-4ZWCXW"
     },
     "certificat_url": "docs/cert_LOT 245-k25.pdf"
+  },
+  {
+    "id": "ANOR-G0OR2Q0",
+    "name": "jus de goyave",
+    "company": "yetho sarl",
+    "pack": "bouteille en verre de 35cl",
+    "origin": "Cameroun",
+    "lot": "BN-256-X24",
+    "date_prod": "2026-05-23",
+    "date_exp": "2030-05-31",
+    "security": {
+      "topo": -3,
+      "vib": 1.03,
+      "stegano": "TR-G0OR2Q0"
+    },
+    "timestamp": "2026-05-08T23:27:02.789Z"
   }
 ]
